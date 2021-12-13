@@ -19,7 +19,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module SU(
-	 input [14:0] Op,
+	 input [15:0] Op,
 	 input [1:0] Tnew_E,
 	 input [1:0] Tnew_M,
 	 input [4:0] A1_D,
@@ -34,14 +34,13 @@ module SU(
 	 output [1:0] Tnew
     );
 
-	wire	mf, mt, alur, alui, shift, shiftv, set, seti, load, store, branch, j, jal, jr, jalr;
+	wire	hl, mf, mt, alur, alui, shift, shiftv, set, seti, load, store, branch, j, jal, jr, jalr;
 	wire	Tuse_RS0, Tuse_RS1, Tuse_RT0, Tuse_RT1, Tuse_RT2;
 	wire	Stall_RS0_E1, Stall_RS0_E2, Stall_RS1_E2, Stall_RS0_M1,
 			Stall_RT0_E1, Stall_RT0_E2, Stall_RT1_E2, Stall_RT0_M1,
 			Stall_RS, Stall_RT, Stall_HILO;
 	
-	//{mfhi | mflo, mthi | mtlo, alur, alui, sll | srl | sra, sllv | srlv | srav, slt | sltu, slti | sltiu, load, store, branch, j, jal, jr, jalr};
-	
+	assign hl		= Op[15];
 	assign mf		= Op[14];
 	assign mt		= Op[13];
 	assign alur		= Op[12];
@@ -60,9 +59,9 @@ module SU(
 	
 	// hazard solving
 	assign Tuse_RS0	=	branch | jr | jalr;
-	assign Tuse_RS1	=	mt | alur | alui | shiftv | set | seti | load | store;
+	assign Tuse_RS1	=	hl | mt | alur | alui | shiftv | set | seti | load | store;
 	assign Tuse_RT0	=	branch;
-	assign Tuse_RT1	=	alur | shift | shiftv | set;
+	assign Tuse_RT1	=	hl | alur | shift | shiftv | set;
 	assign Tuse_RT2	=	store;
 	
 	assign Stall_RS0_E1	=	Tuse_RS0 & (Tnew_E == 2'b01) & (A1_D != 5'b0) & (A1_D == A3_E) & RFWr_E;
