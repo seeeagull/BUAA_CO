@@ -74,7 +74,7 @@
 module CU(
 	 input [31:0] Instr,
 	 input Cmp,
-	 output [14:0] Op,
+	 output [15:0] Op,
 	 output hilo,
 	 output [2:0] CMPOp,		// D
 	 output [1:0] MPCOp,		// D
@@ -154,7 +154,7 @@ module CU(
 	assign mthi	= 	(Instr[31:26] == `Rtype) && (Instr[5:0] == `Mthi);
 	assign mtlo	= 	(Instr[31:26] == `Rtype) && (Instr[5:0] == `Mtlo);
 	
-	assign Op	=	{mfhi | mflo, mthi | mtlo, alur, alui, sll | srl | sra, sllv | srlv | srav, slt | sltu, slti | sltiu, load, store, branch, j, jal, jr, jalr};
+	assign Op	=	{mult | multu | div | divu, mfhi | mflo, mthi | mtlo, alur, alui, sll | srl | sra, sllv | srlv | srav, slt | sltu, slti | sltiu, load, store, branch, j, jal, jr, jalr};
 	assign hilo		=	mult | multu | div | divu | mfhi | mflo | mthi | mtlo;
 	
 	assign store	=	sb | sh | sw;
@@ -171,7 +171,7 @@ module CU(
 	assign CMPOp	=	{bltz | bgez, blez | bgtz, bne | bgtz | bgez};						//	OK
 	assign NPCOp	= 	{j | jal, (branch & Cmp)};													// OK
 	assign RFWr 	= 	alur | alui | shift | load | set | jal | jalr | mfhi | mflo;	// OK
-	assign RFWD		=	(mfhi | mflo) 						? 2'b11 : // HILO						// HILO---OK?
+	assign RFWD		=	(mfhi | mflo) 						? 2'b11 : // HILO						// OK
 							(jal | jalr)						? 2'b10 : // PC8
 							load									? 2'b01 : // DM
 							(alur | alui | shift | set) 	? 2'b00 : // ALU
