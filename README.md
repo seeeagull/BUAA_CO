@@ -1,2 +1,6 @@
-# BUAA_CO
-## P6 支持50条MIPS架构指令的Verilog流水线CPU
+# BUAA_CO #
+Verilog流水线CPU
+## P6 ##
+支持50条MIPS指令
+## P7 ##
+支持中断和异常响应
